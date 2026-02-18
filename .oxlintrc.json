@@ -1,4 +1,5 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "extends": ["./node_modules/adamantite/presets/lint/core.json"]
+  "extends": ["./node_modules/adamantite/presets/lint/core.json"],
+  "ignorePatterns": [".context/**"]
 }

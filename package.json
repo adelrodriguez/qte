@@ -1,11 +1,16 @@
 {
   "name": "qte",
   "version": "0.0.1",
-  "description": "Time conversion utilities",
+  "description": "Parse human-readable time expressions into any unit, and format durations into human-readable strings",
   "keywords": [
-    "bun",
-    "library",
-    "template"
+    "convert",
+    "duration",
+    "format",
+    "human-readable",
+    "milliseconds",
+    "ms",
+    "parse",
+    "time"
   ],
   "homepage": "https://github.com/adelrodriguez/qte#readme",
   "bugs": {
@@ -15,18 +20,27 @@
   "author": "Adel Rodríguez",
   "repository": {
     "type": "git",
-    "url": "https://github.com/adelrodriguez/qte.git"
+    "url": "git+https://github.com/adelrodriguez/qte.git"
   },
   "files": [
     "dist"
   ],
   "type": "module",
-  "module": "src/index.ts",
+  "sideEffects": false,
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "bunup",
+    "build:debug": "bunup --sourcemap inline --no-minify",
     "bump:deps": "bun update --interactive",
     "check": "adamantite check",
-    "dev": "bunup --watch",
+    "dev": "bunup --watch --sourcemap inline --no-minify",
     "fix": "adamantite fix",
     "release": "changeset publish",
     "init": "bun run --bun scripts/init.ts",

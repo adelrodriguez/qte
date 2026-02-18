@@ -23,8 +23,9 @@
     "**/coverage/**",
     "**/.next/**",
     "**/.vercel/**",
-    "**/.turbo/**"
+    "**/.turbo/**",
+    "**/.context/**"
   ],
-  "ignore": ["**/*.d.ts"],
+  "ignore": ["**/*.d.ts", ".context/**"],
   "project": ["src/**/*.ts"]
 }

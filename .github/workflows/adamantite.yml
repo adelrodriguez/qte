@@ -29,6 +29,10 @@ jobs:
             command: bun run format --check
           - name: types
             command: bun run typecheck
+          - name: test
+            command: bun run test
+          - name: build
+            command: bun run build
           - name: analyze
             command: bun run analyze
 
