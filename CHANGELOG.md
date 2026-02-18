@@ -1,5 +1,11 @@
 # qte
 
+## 0.1.1
+
+### Patch Changes
+
+- a1fab60: Fix broken bundle size badge in README and move typescript to devDependencies
+
 ## 0.1.0
 
 ### Minor Changes
@@ -9,6 +15,7 @@
 ### Patch Changes
 
 - de51ec7: Audit-driven cleanup:
+
   - Fixed compound negative round-tripping by applying leading sign semantics to compound expressions (for example, `parse("-1h 30m")` now returns `-5_400_000`).
   - Hardened `format` option validation so `precision` must be a finite positive integer; invalid values now throw `RangeError`.
   - Updated package entry metadata to point at built `dist` outputs for improved publish-time compatibility.
