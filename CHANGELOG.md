@@ -1,5 +1,11 @@
 # qte
 
+## 0.1.1
+
+### Patch Changes
+
+- a1fab60: Fix broken bundle size badge in README and move typescript to devDependencies
+
 ## 0.1.0
 
 ### Minor Changes
