@@ -2,7 +2,7 @@
   <h1 align="center">⏱️ <code>qte</code></h1>
 
   <p align="center">
-    <strong>Parsing and formatting for human-readable time expressions.</strong>
+    <strong>Type-safe time unit conversions from human-readable expressions</strong>
   </p>
 
   <p align="center">
@@ -14,12 +14,12 @@
 
 ## Features
 
-- Parse time strings into any unit (milliseconds, seconds, minutes, hours, days, weeks, months, years)
-- Compound expressions (`"1h 30m"`, `"1 day, 6 hours"`)
-- Format milliseconds back to human-readable strings with configurable precision
-- Tree-shakeable named exports
-- TypeScript `TimeExpression` type with compile-time checking and `isTimeExpression` / `isCompoundTimeExpression` guards
-- Zero dependencies
+- Convert time expressions directly into any unit — `seconds("1h")`, `days("1w")`, `ms("30s")`
+- Full suite of unit functions: `ms`, `seconds`, `minutes`, `hours`, `days`, `weeks`, `months`, `years`
+- TypeScript `TimeExpression` type with compile-time checking and runtime guards
+- Parse compound expressions (`"1h 30m"`, `"1 day, 6 hours"`) into milliseconds
+- Format milliseconds back to human-readable strings
+- Tree-shakeable named exports, zero dependencies
 
 ## Install
 
@@ -34,27 +34,63 @@ pnpm add qte
 ## Quick Start
 
 ```ts
-import { parse, format, ms, seconds, MS_PER_WEEK } from "qte"
+import { seconds, minutes, hours, days, ms } from "qte"
 
-parse("2 days, 6 hours") // 194_400_000
-format(3_600_000) // "1h"
-format(5_432_100, { precision: 3 }) // "1h 30m 32s"
-format(5 * MS_PER_WEEK, { precision: 2 }) // "1mo 1w" (approximate)
-ms("1h") // 3_600_000
-seconds("30m") // 1800
+seconds("1h") // 3600
+seconds("500ms") // 0.5
+minutes("2h") // 120
+hours("1d") // 24
+days("1w") // 7
+ms("30s") // 30_000
 ```
 
 ## API
 
+### Unit Functions
+
+Convert a time expression to any unit. Each function accepts a `TimeExpression` string and returns the value in the named unit.
+
+```ts
+import { ms, seconds, minutes, hours, days, weeks, months, years } from "qte"
+
+ms("1s") // 1000
+ms("1h") // 3_600_000
+seconds("1h") // 3600
+seconds("500ms") // 0.5
+minutes("2h") // 120
+hours("1d") // 24
+days("1w") // 7
+weeks("1y") // 52.1775
+months("1y") // 12
+years("365d") // 1
+```
+
+TypeScript validates expressions at compile time:
+
+```ts
+ms("1h") // ✅ compiles
+ms("hello") // ❌ type error — "hello" is not a TimeExpression
+```
+
+Use `isTimeExpression` to validate untrusted input at runtime:
+
+```ts
+import { ms, isTimeExpression } from "qte"
+
+const input: string = getUserInput()
+if (isTimeExpression(input)) {
+  ms(input) // TypeScript knows `input` is TimeExpression
+}
+```
+
 ### `parse`
 
-Parses a time expression and returns the value in milliseconds.
+Parses simple or compound time expressions into milliseconds. Use this when you need to handle multi-part expressions like `"1h 30m"`.
 
 ```ts
 import { parse } from "qte"
 
 parse("1h") // 3_600_000
-parse("30s") // 30_000
 parse("1h 30m") // 5_400_000
 parse("1 day, 6 hours, 30 minutes") // 109_800_000
 ```
@@ -68,64 +104,23 @@ import { format } from "qte"
 
 format(3_600_000) // "1h"
 format(500) // "500ms"
-format(0) // "0ms"
 format(-3_600_000) // "-1h"
+format(3_600_000, { long: true }) // "1 hour"
+format(5_432_100, { precision: 3 }) // "1h 30m 32s"
 ```
-
-#### Options
 
 | Option      | Type      | Default | Description                               |
 | ----------- | --------- | ------- | ----------------------------------------- |
 | `long`      | `boolean` | `false` | Use verbose format (`"1 hour"` vs `"1h"`) |
 | `precision` | `number`  | `1`     | Maximum number of unit segments to output |
 
-```ts
-format(3_600_000, { long: true }) // "1 hour"
-format(5_432_100, { precision: 3 }) // "1h 30m 32s"
-format(5_400_000, { long: true, precision: 2 }) // "1 hour 30 minutes"
-```
-
-#### Precision
-
-When `precision` is `1` (the default), the value is rounded to the single largest applicable unit. Higher values decompose the duration into multiple segments, with the last segment rounded to absorb the remainder.
-
-If the value has fewer meaningful segments than the requested precision, only the meaningful segments are returned:
-
-```ts
-format(3_600_000, { precision: 5 }) // "1h"
-format(500, { precision: 10 }) // "500ms"
-```
-
-Month/year units use fixed average durations, so low precision can produce noticeable approximation around week/month boundaries:
-
-```ts
-format(5 * MS_PER_WEEK, { precision: 2 }) // "1mo 1w" (approximate)
-```
+When `precision` is `1` (the default), the value is rounded to the single largest applicable unit. Higher values decompose the duration into multiple segments, with the last segment rounded to absorb the remainder. If the value has fewer meaningful segments than the requested precision, only the meaningful segments are returned.
 
 The output of `format` is always a valid input for `parse`:
 
 ```ts
 const expr = format(5_400_000, { precision: 2 }) // "1h 30m"
 parse(expr) // 5_400_000
-
-const negativeExpr = format(-5_400_000, { precision: 2 }) // "-1h 30m"
-parse(negativeExpr) // -5_400_000
-```
-
-### Unit Functions
-
-Each function parses a single time expression and returns the value in the named unit. For compound expressions, use `parse` instead.
-
-```ts
-import { ms, seconds, minutes, hours, days, weeks, months, years } from "qte"
-
-ms("1s") // 1000
-seconds("1h") // 3600
-seconds("500ms") // 0.5
-minutes("2h") // 120
-hours("1d") // 24
-days("1w") // 7
-weeks("1y") // 52.1775
 ```
 
 ### `isTimeExpression`
@@ -139,11 +134,6 @@ isTimeExpression("1h") // true
 isTimeExpression("500ms") // true
 isTimeExpression("1h 30m") // false (use isCompoundTimeExpression)
 isTimeExpression("hello") // false
-
-const input: string = getUserInput()
-if (isTimeExpression(input)) {
-  ms(input) // TypeScript knows `input` is TimeExpression
-}
 ```
 
 ### `isCompoundTimeExpression`
@@ -156,11 +146,6 @@ import { isCompoundTimeExpression } from "qte"
 isCompoundTimeExpression("1h") // true
 isCompoundTimeExpression("1h 30m") // true
 isCompoundTimeExpression("hello") // false
-
-const input: string = getUserInput()
-if (isCompoundTimeExpression(input)) {
-  parse(input) // input is a valid time expression
-}
 ```
 
 ### Constants
