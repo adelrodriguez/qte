@@ -7,7 +7,7 @@
 
   <p align="center">
     <a href="https://www.npmjs.com/package/qte"><img src="https://img.shields.io/npm/v/qte" alt="npm version"></a>
-    <a href="https://pkg-size.dev/qte"><img src="https://pkg-size.dev/badge/bundle/qte" alt="bundle size"></a>
+    <a href="https://pkg-size.dev/qte"><img src="https://pkg-size.dev/badge/install/23648640" title="Install size for qte"></a>
     <a href="https://github.com/adelrodriguez/qte/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/qte" alt="license"></a>
   </p>
 </div>
