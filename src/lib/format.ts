@@ -145,7 +145,7 @@ function formatMultiPrecision(
   // Drop trailing zero segments
   while (segments.length > 1) {
     const last = segments.at(-1)
-    if (!last || last.value !== 0) break
+    if (last?.value !== 0) break
     segments.pop()
   }
 
