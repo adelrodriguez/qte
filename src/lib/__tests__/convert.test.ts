@@ -1,5 +1,5 @@
-import { describe, expect, it } from "bun:test"
 import fc from "fast-check"
+import { describe, expect, it } from "vitest"
 import { convert, days, hours, minutes, months, ms, seconds, weeks, years } from "../convert"
 import { InvalidTimeExpressionError } from "../errors"
 import { parse } from "../parse"

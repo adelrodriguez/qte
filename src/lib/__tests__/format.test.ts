@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test"
+import { describe, expect, it } from "vitest"
 import { MS_PER_DAY, MS_PER_MINUTE, MS_PER_WEEK } from "../constants"
 import { format } from "../format"
 

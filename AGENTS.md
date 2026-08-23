@@ -23,7 +23,7 @@ Use the single-context domain-doc layout. See `docs/agents/domain.md`.
 ## Changesets
 
 - Use Changesets for versioning and changelog management.
-- Run `bun changeset --empty` to create an empty changeset.
+- Run `pnpm exec changeset --empty` to create an empty changeset.
 - Do not make a major version bump unless the user requests it.
 - If a change is breaking and the package is at version 1.0.0 or higher, alert the user.
 
@@ -34,10 +34,10 @@ Use the single-context domain-doc layout. See `docs/agents/domain.md`.
 This project uses Adamantite for its managed formatting, linting, type checking, and dependency-analysis setup.
 
 - Prefer the package scripts Adamantite added for this workspace.
-- Run `bun run format` after editing files. Direct command: `adamantite format`.
-- Run `bun run check` to catch lint and type issues. Direct command: `adamantite check`.
-- Run `bun run fix` to apply safe lint fixes. Direct command: `adamantite fix`.
-- Run `bun run analyze` after changing dependencies, imports, or exports. Direct command: `adamantite analyze`.
+- Run `pnpm run format` after editing files. Direct command: `adamantite format`.
+- Run `pnpm run check` to catch lint and type issues. Direct command: `adamantite check`.
+- Run `pnpm run fix` to apply safe lint fixes. Direct command: `adamantite fix`.
+- Run `pnpm run analyze` after changing dependencies, imports, or exports. Direct command: `adamantite analyze`.
 - Use `adamantite doctor` to inspect managed setup and `adamantite doctor --fix` for safe local fixes.
 
 <!-- ADAMANTITE:END -->
